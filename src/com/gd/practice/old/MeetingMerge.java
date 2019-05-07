@@ -1,28 +1,28 @@
-package com.gd.practice;
+package com.gd.practice.old;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 class Meeting implements Comparable<Meeting>{
-	private int starttime;
-	private int endtime;
+	private int startTime;
+	private int endTime;
 	
 	Meeting(int start, int end) {
-		this.starttime = start;
-		this.endtime = end;
+		this.startTime = start;
+		this.endTime = end;
 	}
 	
-	public int getStart() {
-		return starttime;
+	int getStart() {
+		return startTime;
 	}
 	
-	public int getEnd() {
-		return endtime;
+	int getEnd() {
+		return endTime;
 	}
 	
 	@Override
 	public String toString() {
-		return ("Meeting- [start:" + starttime + " end:" + endtime + "]");
+		return ("Meeting- [start:" + startTime + " end:" + endTime + "]");
 	}
 
 	@Override
@@ -33,8 +33,8 @@ class Meeting implements Comparable<Meeting>{
 
 public class MeetingMerge {
 	
-	public static ArrayList<Meeting> merge(Meeting[] m1) {
-		ArrayList<Meeting> result = new ArrayList<Meeting>();
+	private static ArrayList<Meeting> merge(Meeting[] m1) {
+		ArrayList<Meeting> result = new ArrayList<>();
 		int start = m1[0].getStart();
 		int end = m1[0].getEnd();
 		

@@ -1,18 +1,18 @@
-package com.gd.practice;
+package com.gd.practice.old;
 
 public class ArrayOP {
 
-	public enum OP { GTE, GT, E, LT, LTE;}
+	public enum OP { GTE, GT, E, LT, LTE}
 	
 	public static void main(String[] args) {
 		
-		int[] arr = new int[] {10};//,20,30,40,50};
+		int[] arr = new int[] {10,20,30,40,50};
 		OP op = OP.LT;
 		int value = 55;			
 		System.out.println("Result index: " + ArrayOP.solution(arr, op, value));
 	}
 	
-	static int solution(int[] arr, OP op, int value) {
+	private static int solution(int[] arr, OP op, int value) {
 		
 		// checking if array is empty.
 		if(arr.length < 1)

@@ -1,10 +1,10 @@
-package com.gd.practice;
+package com.gd.practice.old;
 
 import java.util.Arrays;
 
 public class MultiplicationTest {
 	
-	public static void calculate(int[] arr) {
+	private static void calculate(int[] arr) {
 		
 		int[] arr2 = new int[arr.length];
 		

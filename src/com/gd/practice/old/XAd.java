@@ -1,15 +1,14 @@
-package com.gd.practice;
+package com.gd.practice.old;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class XAd {
 
 	public static void main(String args[]) {
-		List<Block> input = new ArrayList<Block>();
+		List<Block> input = new ArrayList<>();
 		input.add(new Block(1, "C", 2));
 		input.add(new Block(2, "B", 3));
 		input.add(new Block(3, "A", 0));
@@ -20,13 +19,11 @@ public class XAd {
 		XAd.printTree(input);
 	}
 	
-	static void printTree(List<Block> input) {
-		Map<Integer,List<Block>> map = new HashMap<Integer,List<Block>>();
-		Iterator<Block> ite = input.iterator();
+	private static void printTree(List<Block> input) {
+		Map<Integer,List<Block>> map = new HashMap<>();
 		
 		int maxId = 0;
-		while(ite.hasNext()) {
-			Block b = ite.next();
+		for (Block b : input) {
 			int parent = b.parent;
 			int id = b.id;
 			if(id > maxId)
@@ -36,7 +33,7 @@ public class XAd {
 				List<Block> tempList = map.get(parent);
 				tempList.add(b);
 			} else {
-				List<Block> tempList = new ArrayList<Block>();
+				List<Block> tempList = new ArrayList<>();
 				tempList.add(b);
 				map.put(parent, tempList);
 			}
@@ -50,13 +47,11 @@ public class XAd {
 		XAd.recPrint(map, 0, "");
 	}
 	
-	static void recPrint(Map<Integer,List<Block>> map, int id, String spaces) {
+	private static void recPrint(Map<Integer,List<Block>> map, int id, String spaces) {
 		List<Block> tempList = map.get(id);
 		if(tempList == null)
 			return;
-		Iterator<Block> ite = tempList.iterator();
-		while(ite.hasNext()) {
-			Block b = ite.next();
+		for (Block b : tempList) {
 			System.out.println(spaces + b.value);
 			XAd.recPrint(map, b.id, spaces + "  ");
 		}
@@ -64,9 +59,9 @@ public class XAd {
 }
 
 class Block {
-	int id = 0;
-	String value = null;
-	int parent = 0;
+	int id;
+	String value;
+	int parent;
 	
 	Block(int id, String value, int parent) {
 		this.id = id;

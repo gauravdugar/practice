@@ -1,10 +1,10 @@
-package com.gd.practice;
+package com.gd.practice.old;
 
 import java.util.HashMap;
 
-public class Trie {
+class Trie {
 	
-	Node root = null;
+	private Node root;
 	
 	Trie() {
 		this.root = new Node(null);
@@ -16,10 +16,10 @@ public class Trie {
 		
 		char[] cArr = s.toCharArray();
 		Node currNode = root;
-		for(int i=0; i<cArr.length; i++) {
-			if(!currNode.childMap.containsKey(cArr[i]))
-				currNode.childMap.put(cArr[i], new Node(cArr[i]));
-			currNode = currNode.childMap.get(cArr[i]);
+		for (char c : cArr) {
+			if(!currNode.childMap.containsKey(c))
+				currNode.childMap.put(c, new Node(c));
+			currNode = currNode.childMap.get(c);
 		}
 		currNode.endOfString = true;
 	}
@@ -30,26 +30,24 @@ public class Trie {
 		
 		char[] cArr = s.toCharArray();
 		Node currNode = root;
-		for(int i=0; i<cArr.length; i++) {
-			if(!currNode.childMap.containsKey(cArr[i]))
+		for (char c : cArr) {
+			if(!currNode.childMap.containsKey(c))
 				return false;
-			currNode = currNode.childMap.get(cArr[i]);
+			currNode = currNode.childMap.get(c);
 		}
-		if(currNode.endOfString)
-			return true;
-		return false;
+		return currNode.endOfString;
 	}
 }
 
 class Node {
 	
-	Character value = null;
+	private Character value;
 	boolean endOfString = false;
 	
-	HashMap<Character,Node> childMap = null;	
+	HashMap<Character,Node> childMap;
 	
 	Node(Character value) {
-		this.childMap = new HashMap<Character,Node>();	
+		this.childMap = new HashMap<>();
 		this.value = value;
 	}
 }

@@ -1,4 +1,4 @@
-package com.gd.practice;
+package com.gd.practice.old;
 
 import java.util.Arrays;
 
@@ -45,12 +45,12 @@ public class DP_2 {
 	
 	private static void printArrays() {
 		System.out.println("\nMin value array");
-		for(int i=0; i<arrMin.length; i++) {
-			System.out.println(Arrays.toString(arrMin[i]));
+		for (int[] array : arrMin) {
+			System.out.println(Arrays.toString(array));
 		}
 		System.out.println("\nMax value array");
-		for(int i=0; i<arrMax.length; i++) {
-			System.out.println(Arrays.toString(arrMax[i]));
+		for(int[] array : arrMax) {
+			System.out.println(Arrays.toString(array));
 		}
 	}
 	
