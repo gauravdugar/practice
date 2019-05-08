@@ -1,5 +1,75 @@
 package com.gd.practice.ds;
 
-public class MyHashMap {
+import java.util.ArrayList;
+import java.util.LinkedList;
 
+class HashMapImpl {
+
+    private int BUCKET_COUNT = 16;
+
+    private ArrayList<LinkedList<Node>> buckets;
+
+    HashMapImpl() {
+        buckets = new ArrayList<>();
+    }
+
+    public void put(String key, String value) {
+        if (key == null) {
+            throw new RuntimeException("null key is not supported.");
+        }
+
+        int targetBucketIndex = getBucketIndexByKey(key);
+        LinkedList<Node> targetBucket = buckets.get(targetBucketIndex);
+
+              //  cant use LinkedList. Need to implement custom bucket.
+    }
+
+    public String get(String key) {
+        return null;
+    }
+
+    public boolean contains(String key) {
+        return true;
+    }
+
+    public void remove(String key) {
+
+    }
+
+    private void rearrange() {
+
+    }
+
+    private int getBucketIndexByKey(String key) {
+        int hashCode = key.hashCode();
+        return hashCode % BUCKET_COUNT;
+    }
+
+    public void printMap() {
+        System.out.println("Bucket Count: " + BUCKET_COUNT);
+        System.out.println();
+    }
+}
+
+class Node {
+    private String key;
+    private String value;
+    private int hash;
+
+    Node(String key, String value, int hash) {
+        this.hash = hash;
+        this.key = key;
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "Key: " + key + ", Value: " + value + ", Hash: " + hash;
+    }
+}
+
+public class MyHashMap {
+    public static void main(String args[]) {
+        System.out.println("This is my HashMap implementation");
+    }
 }
