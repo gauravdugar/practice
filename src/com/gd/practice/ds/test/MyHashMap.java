@@ -1,83 +1,60 @@
 package com.gd.practice.ds.test;
 
-import java.util.ArrayList;
-
 class HashMapImpl {
-
     private int BUCKET_COUNT = 4;
+    private int USED_BUCKET_COUNT = 0;
 
-    private ArrayList<Bucket> bucketList;
+    private Node[] firstNodeArray;
 
     HashMapImpl() {
-        bucketList = new ArrayList<>();
-
-        int bucketIndex = 0;
-        while (bucketIndex < BUCKET_COUNT) {
-            bucketList.add(new Bucket(bucketIndex));
-            bucketIndex++;
-        }
+        firstNodeArray = new Node[BUCKET_COUNT];
     }
 
-    public void put(String key, String value) {
+    void put(String key, String value) {
         if (key == null) {
             throw new RuntimeException("null key is not supported.");
         }
-        Node n = new Node(key, value, key.hashCode());
-        Bucket b = bucketList.get(getBucketIndexByKey(key));
-        b.addNode(n);
+        Node newNode = new Node(key, value, key.hashCode());
+        int bucketIndex = getBucketIndexByKey(key);
+        System.out.println("Adding {" + key + ", " + value + "} to bucket " + bucketIndex);
+
+        if (firstNodeArray[bucketIndex] == null) {
+            firstNodeArray[bucketIndex] = newNode;
+            USED_BUCKET_COUNT++;
+            rearrange();
+        } else {
+            Node currentNode = firstNodeArray[bucketIndex];
+            while (true) {
+                if (currentNode.hash == newNode.hash && currentNode.key.equals(newNode.key)) {
+                    currentNode.value = newNode.value;
+                    return;
+                }
+                if (currentNode.nextNode == null) {
+                    currentNode.nextNode = newNode;
+                    return;
+                }
+                currentNode = currentNode.nextNode;
+            }
+        }
     }
 
-    public String get(String key) {
-        Bucket b = bucketList.get(getBucketIndexByKey(key));
-        Node n = b.findNode(key.hashCode());
+    String get(String key) {
+        Node n = findNode(key);
         return n == null ? null : n.value;
     }
 
-    public boolean contains(String key) {
-        Bucket b = bucketList.get(getBucketIndexByKey(key));
-        return b.findNode(key.hashCode()) != null;
+    boolean contains(String key) {
+        return findNode(key) != null;
     }
 
-    public void remove(String key) {
-        Bucket b = bucketList.get(getBucketIndexByKey(key));
-        b.removeNode(key);
-    }
-
-    private void rearrange() {
-
-    }
-
-    private int getBucketIndexByKey(String key) {
-        int hashCode = key.hashCode();
-        return hashCode % BUCKET_COUNT;
-    }
-
-    public void printMap() {
-        System.out.println("Bucket Count: " + BUCKET_COUNT);
-
-        for (Bucket b : bucketList) {
-            System.out.println("Bucket " + b.bucketIndex);
-            Node currentNode = b.firstNode;
-            while (currentNode != null) {
-                System.out.println(currentNode);
-                currentNode = currentNode.nextNode;
-            }
-            System.out.println();
+    private Node findNode(String key) {
+        if (key == null) {
+            throw new RuntimeException("null key is not supported.");
         }
-    }
-}
+        int bucketIndex = getBucketIndexByKey(key);
+        int hash = key.hashCode();
 
-class Bucket {
-
-    int bucketIndex;
-    Node firstNode;
-
-    Bucket(int bucketIndex) {
-        this.bucketIndex = bucketIndex;
-    }
-
-    Node findNode(int hash) {
-        Node currentNode = firstNode;
+        Node currentNode = firstNodeArray[bucketIndex];
         while (currentNode != null) {
             if (currentNode.hash == hash) {
                 break;
@@ -87,34 +64,19 @@ class Bucket {
         return currentNode;
     }
 
-    void addNode(Node newNode) {
-
-        if (firstNode == null) {
-            firstNode = newNode;
-        } else {
-            Node currentNode = firstNode;
-            while (true) {
-                if (currentNode.hash == newNode.hash && currentNode.key.equals(newNode.key)) {
-                    currentNode.value = newNode.value;
-                    return;
-                }
-                if (currentNode.nextNode == null) {
-                     currentNode.nextNode = newNode;
-                     return;
-                }
-                currentNode = currentNode.nextNode;
-            }
+    void remove(String key) {
+        if (key == null) {
+            throw new RuntimeException("null key is not supported.");
         }
-    }
+        int bucketIndex = getBucketIndexByKey(key);
 
-    void removeNode(String key) {
-
-        if (firstNode == null) {
+        if (firstNodeArray[bucketIndex] == null) {
             throw new RuntimeException("Nothing to remove");
-        } else if (firstNode.hash == key.hashCode() && firstNode.key.equals(key)) {
-            firstNode = null;
+        } else if (firstNodeArray[bucketIndex].hash == key.hashCode() && firstNodeArray[bucketIndex].key.equals(key)) {
+            firstNodeArray[bucketIndex] = null;
+            USED_BUCKET_COUNT--;
         } else {
-            Node currentNode = firstNode;
+            Node currentNode = firstNodeArray[bucketIndex];
             Node nextNode = currentNode.nextNode;
             while (nextNode != null) {
                 if (nextNode.hash == key.hashCode() && nextNode.key.equals(key)) {
@@ -123,6 +85,35 @@ class Bucket {
                 }
                 currentNode = nextNode;
                 nextNode = nextNode.nextNode;
+            }
+            throw new RuntimeException("Nothing to remove");
+        }
+    }
+
+    private void rearrange() {
+        int usedBucketPercentage = (USED_BUCKET_COUNT * 100) / BUCKET_COUNT;
+        if (usedBucketPercentage < 75) {
+            return;
+        }
+
+        System.out.println(usedBucketPercentage + "% buckets are full. Rearranging HashMap now.");
+
+    }
+
+    private int getBucketIndexByKey(String key) {
+        int hashCode = key.hashCode();
+        return hashCode % BUCKET_COUNT;
+    }
+
+    void printMap() {
+        System.out.println("\nBucket Count: " + BUCKET_COUNT + "\n");
+
+        for (int i = 0; i < firstNodeArray.length; i++) {
+            System.out.println("Bucket " + i);
+            Node currentNode = firstNodeArray[i];
+            while (currentNode != null) {
+                System.out.println(currentNode);
+                currentNode = currentNode.nextNode;
             }
         }
     }
@@ -150,17 +141,18 @@ public class MyHashMap {
     public static void main(String args[]) {
         System.out.println("This is my HashMap implementation\n");
         HashMapImpl map = new HashMapImpl();
-        map.put("key1", "v1");
-        map.put("key2", "v2");
-        map.put("key3", "v3");
-        map.put("key4", "v4");
+        map.put("k2", "v2");
+        map.put("k3", "v3");
+        map.put("k4", "v4");
+        map.put("k5", "v5");
+        map.put("k6", "v6");
         map.printMap();
-
+        System.out.println("value of k2 in the map: " + map.get("k2"));
         System.out.println("Is k3 in the map: " + map.contains("k3"));
         map.remove("k3");
         System.out.println("Is k3 in the map: " + map.contains("k3"));
-
-        map.put("key3", "v3");
+        map.put("k2", "v2-new");
+        System.out.println("value of k2 in the map: " + map.get("k2"));
         map.printMap();
     }
 }
