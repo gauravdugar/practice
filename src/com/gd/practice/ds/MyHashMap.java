@@ -7,21 +7,14 @@ class HashMapImpl {
 
     private int BUCKET_COUNT = 16;
 
-    private ArrayList<LinkedList<Node>> buckets;
-
     HashMapImpl() {
-        buckets = new ArrayList<>();
+
     }
 
     public void put(String key, String value) {
         if (key == null) {
             throw new RuntimeException("null key is not supported.");
         }
-
-        int targetBucketIndex = getBucketIndexByKey(key);
-        LinkedList<Node> targetBucket = buckets.get(targetBucketIndex);
-
-              //  cant use LinkedList. Need to implement custom bucket.
     }
 
     public String get(String key) {
@@ -47,8 +40,11 @@ class HashMapImpl {
 
     public void printMap() {
         System.out.println("Bucket Count: " + BUCKET_COUNT);
-        System.out.println();
     }
+}
+
+class Bucket {
+
 }
 
 class Node {
