@@ -23,8 +23,8 @@ public class NetworkDelayTime {
         System.out.println("K: " + k);
         System.out.println();
 
-        Solution object = new Solution();
-        int result = object.networkDelayTime(times, n, k);
+        Solution solution = new Solution();
+        int result = solution.networkDelayTime(times, n, k);
 
         System.out.println("result: " + result);
     }
@@ -32,12 +32,9 @@ public class NetworkDelayTime {
 
 class Solution {
 
-    private Node[] nodeArr;
-    private Set<Node> nodesVisited;
-
-    int networkDelayTime(int[][] times, int N, int K) {
-        nodesVisited = new HashSet<>();
-        nodeArr = new Node[N];
+    public int networkDelayTime(int[][] times, int N, int K) {
+        Set<Node> nodesVisited = new HashSet<>();
+        Node[] nodeArr = new Node[N];
 
         // Creating array of N nodes.
         for (int i = 0; i < N; i++) {
@@ -51,16 +48,13 @@ class Solution {
         }
 
         // maxDistance travelled via available path.
-        int maxDistance = parseNode(nodeArr[K-1]);
+        int maxDistance = parseNode(nodeArr[K-1], nodeArr, nodesVisited);
 
         // return maxDistance if all nodes traversed, otherwise -1.
         return nodesVisited.size() != N ? -1 : maxDistance;
     }
 
-    /**
-     * Recursive method that returns the maxDistance that can be travelled through its child nodes
-     */
-    private int parseNode(Node n) {
+    private int parseNode(Node n, Node[] nodeArr, Set<Node> nodesVisited) {
         Set<Integer> childNodes = n.map.keySet();
         Iterator<Integer> ite = childNodes.iterator();
 
@@ -72,20 +66,17 @@ class Solution {
             maxDistance =
                     Math.max(
                             maxDistance,
-                            parseNode(nodeArr[nextChildNode]) + n.map.get(nextChildNode));
+                            parseNode(nodeArr[nextChildNode], nodeArr, nodesVisited) + n.map.get(nextChildNode));
         }
 
         return maxDistance;
     }
-}
 
-/**
- * Helper node class.
- */
-class Node {
-    HashMap<Integer, Integer> map;
+    class Node {
+        HashMap<Integer, Integer> map;
 
-    Node() {
-        map = new HashMap<>();
+        Node() {
+            map = new HashMap<>();
+        }
     }
 }
