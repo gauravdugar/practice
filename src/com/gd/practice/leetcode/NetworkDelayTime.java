@@ -1,6 +1,6 @@
 package com.gd.practice.leetcode;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * https://leetcode.com/problems/network-delay-time/
@@ -12,7 +12,7 @@ import java.util.Arrays;
  */
 public class NetworkDelayTime {
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         int[][] times = {{2,1,1},{2,3,1},{3,4,1}};
         int n = 4;
         int k = 2;
@@ -23,15 +23,69 @@ public class NetworkDelayTime {
         System.out.println("K: " + k);
         System.out.println();
 
-        int result = Solution.networkDelayTime(times, n, k);
+        Solution object = new Solution();
+        int result = object.networkDelayTime(times, n, k);
 
         System.out.println("result: " + result);
     }
 }
 
 class Solution {
-    public static int networkDelayTime(int[][] times, int N, int K) {
-        int result = -1;
-        return result;
+
+    private Node[] nodeArr;
+    private Set<Node> nodesVisited;
+
+    int networkDelayTime(int[][] times, int N, int K) {
+        nodesVisited = new HashSet<>();
+        nodeArr = new Node[N];
+
+        // Creating array of N nodes.
+        for (int i = 0; i < N; i++) {
+            nodeArr[i] = new Node();
+        }
+
+        // Updating map of each node to include child nodes, and their distance.
+        for (int[] time : times) {
+            Node n = nodeArr[time[0]-1];
+            n.map.put(time[1]-1, time[2]);
+        }
+
+        // maxDistance travelled via available path.
+        int maxDistance = parseNode(nodeArr[K-1]);
+
+        // return maxDistance if all nodes traversed, otherwise -1.
+        return nodesVisited.size() != N ? -1 : maxDistance;
+    }
+
+    /**
+     * Recursive method that returns the maxDistance that can be travelled through its child nodes
+     */
+    private int parseNode(Node n) {
+        Set<Integer> childNodes = n.map.keySet();
+        Iterator<Integer> ite = childNodes.iterator();
+
+        nodesVisited.add(n);
+        int maxDistance = 0;
+
+        while(ite.hasNext()) {
+            Integer nextChildNode = ite.next();
+            maxDistance =
+                    Math.max(
+                            maxDistance,
+                            parseNode(nodeArr[nextChildNode]) + n.map.get(nextChildNode));
+        }
+
+        return maxDistance;
+    }
+}
+
+/**
+ * Helper node class.
+ */
+class Node {
+    HashMap<Integer, Integer> map;
+
+    Node() {
+        map = new HashMap<>();
     }
 }
