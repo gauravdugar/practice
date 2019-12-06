@@ -16,6 +16,7 @@ public class TreeEraser {
         res = new HashSet<>();
 
         if (root != null) {
+            res.add(root);
             getForestUtil (root);
         }
         return res;
